@@ -1,5 +1,17 @@
+intervalid = null
+gameclass = null
+classmap = {}
+function LoadGame(classname){
+  if (classname in classmap){
+    FinishLoadGame(classname)
+    return
+  }
 
-function LoadGame(filename, callback){
+  filename = classname + '.js'
+
+  if ( intervalid ){
+    clearInterval(intervalid)
+  }
   var oldGame = document.getElementById('gamescript')
   if (oldGame != null){
     oldGame.outerHTML = ""
@@ -10,6 +22,8 @@ function LoadGame(filename, callback){
         done = false;
 
   var newGame = document.createElement('script')
+  var dt = 1/60
+  var background = "white"
   newGame.type = 'text/javascript'
   newGame.src = 'source/' + filename
   newGame.id = 'gamescript'
@@ -18,7 +32,7 @@ function LoadGame(filename, callback){
     if ( !done && (!this.readyState ||
       this.readyState == "loaded" || this.readyState == "complete") ) {
       done = true;
-      FinishLoadGame(); // execute callback function
+      FinishLoadGame(classname); // execute callback function
 
       // Prevent memory leaks in IE
       newGame.onload = newGame.onreadystatechange = null;
@@ -29,29 +43,47 @@ function LoadGame(filename, callback){
   document.head.appendChild(newGame);
 }
 
-var dt = 1/60
-var background = "white"
-
 function Setup(){
   canvas = document.getElementById("gameCanvas")
   ctx = canvas.getContext("2d")
-  LoadGame('game1.js')
+  dt = 1/60
+  background = "white"
+  gamenum = latest
+  LoadGame('Game' + gamenum)
 }
 
-function FinishLoadGame(){
-  game = new Game(ctx, canvas, dt)
-  window.setInterval(Update, dt)
+function FinishLoadGame(classname){
+  gameclass = classmap[classname]
+  game = new gameclass(ctx, canvas, dt)
+  intervalid = window.setInterval(Update, dt)
 }
 
 function Update()
 {
   if (game){
   	ctx.clearRect(0, 0, canvas.width, canvas.height)
+  	ctx.fillStyle = background
   	ctx.fillRect(0, 0, canvas.width, canvas.height)
   	game.gameloop()
   }
 }
 
+
+function Back()
+{
+  if (gamenum > 1){
+    gamenum -= 1
+  }
+  LoadGame('Game' + gamenum)
+}
+
+function Forward()
+{
+  if (gamenum < latest){
+    gamenum += 1
+  }
+  LoadGame('Game' + gamenum)
+}
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
