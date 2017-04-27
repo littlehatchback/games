@@ -29,21 +29,25 @@ function LoadGame(filename, callback){
   document.head.appendChild(newGame);
 }
 
+var dt = 1/60
+var background = "white"
+
 function Setup(){
   canvas = document.getElementById("gameCanvas")
   ctx = canvas.getContext("2d")
-  LoadGame('game-template.js')
+  LoadGame('game1.js')
 }
 
 function FinishLoadGame(){
-  game = new Game(ctx)
-  window.setInterval(Update, 1/60)
+  game = new Game(ctx, canvas, dt)
+  window.setInterval(Update, dt)
 }
 
 function Update()
 {
   if (game){
   	ctx.clearRect(0, 0, canvas.width, canvas.height)
+  	ctx.fillRect(0, 0, canvas.width, canvas.height)
   	game.gameloop()
   }
 }
