@@ -1,5 +1,17 @@
+intervalid = null
+gameclass = null
+classmap = {}
+function LoadGame(classname){
+  if (classname in classmap){
+    FinishLoadGame(classname)
+    return
+  }
 
-function LoadGame(filename, callback){
+  filename = classname + '.js'
+
+  if ( intervalid ){
+    clearInterval(intervalid)
+  }
   var oldGame = document.getElementById('gamescript')
   if (oldGame != null){
     oldGame.outerHTML = ""
@@ -18,7 +30,7 @@ function LoadGame(filename, callback){
     if ( !done && (!this.readyState ||
       this.readyState == "loaded" || this.readyState == "complete") ) {
       done = true;
-      FinishLoadGame(); // execute callback function
+      FinishLoadGame(classname); // execute callback function
 
       // Prevent memory leaks in IE
       newGame.onload = newGame.onreadystatechange = null;
@@ -32,12 +44,14 @@ function LoadGame(filename, callback){
 function Setup(){
   canvas = document.getElementById("gameCanvas")
   ctx = canvas.getContext("2d")
-  LoadGame('game-template.js')
+  gamenum = latest
+  LoadGame('Game' + gamenum)
 }
 
-function FinishLoadGame(){
-  game = new Game(ctx)
-  window.setInterval(Update, 1/60)
+function FinishLoadGame(classname){
+  gameclass = classmap[classname]
+  game = new gameclass(ctx)
+  intervalid = window.setInterval(Update, 1/60)
 }
 
 function Update()
@@ -48,6 +62,22 @@ function Update()
   }
 }
 
+
+function Back()
+{
+  if (gamenum > 1){
+    gamenum -= 1
+  }
+  LoadGame('Game' + gamenum)
+}
+
+function Forward()
+{
+  if (gamenum < latest){
+    gamenum += 1
+  }
+  LoadGame('Game' + gamenum)
+}
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
