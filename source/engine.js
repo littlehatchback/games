@@ -1,71 +1,118 @@
+classmap = {}
+
+function InitialLoad(){
+  gamenum = latest
+  Setup(gamenum)
+}
+
+function MakeClassname(gamenum){
+  return 'game' + gamenum
+}
+
+function Setup(gamenum){
+  engine = new Engine(gamenum)
+}
+
+function DeleteElement(target_id){
+  var old = document.getElementById(target_id)
+  if (old != null){
+    old.outerHTML = ""
+  }
+}
+function SetCanvas(canvas){
+  DeleteElement('gamecanvas')
+  canvas.id = 'gamecanvas'
+  var div = document.getElementById('canvasdiv')
+  div.appendChild(canvas)
+}
+
+class Engine{
+  constructor(gamenum){
+    this.intervalid = null
+    this.gameclass = null
+    this.canvas = document.createElement('canvas')
+    this.dt = 1/60
+    SetCanvas(this.canvas)
+    this.ctx = this.canvas.getContext("2d")
+    this.LoadGame(gamenum)
+
+  }
+
+  LoadGame(gamenum){
+    var classname = MakeClassname(gamenum)
+    if (classname in classmap){
+      this.FinishLoadGame(classname)
+      return
+    }
+
+    var filename = classname + '.js'
+
+    if ( this.intervalid ){
+      clearInterval(intervalid)
+    }
+    DeleteElement('gamescript')
+
+    var head = document.getElementsByTagName("head")[0],
+          done = false;
+
+    var newGame = document.createElement('script')
+    var background = "white"
+    newGame.type = 'text/javascript'
+    newGame.src = 'source/' + filename
+    newGame.id = 'gamescript'
+    self = this
+    newGame.onload = newGame.onreadystatechange = function(){
+
+      if ( !done && (!this.readyState ||
+        this.readyState == "loaded" || this.readyState == "complete") ) {
+        done = true;
+        self.FinishLoadGame(classname); // execute callback function
+
+        // Prevent memory leaks in IE
+        newGame.onload = newGame.onreadystatechange = null;
+        head.removeChild( newGame );
+      }
+    };
+
+    document.head.appendChild(newGame);
+  }
+
+
+
+  resize(){
+    var w = window.innerWidth
+    var h = window.innerHeight
+    var x = Math.min(w, h)
+    this.canvas.width = x
+    this.canvas.height = x
+    this.game.onresize()
+    this.Update()
+  }
+
+  FinishLoadGame(classname){
+    this.gameclass = classmap[classname]
+    this.game = new this.gameclass(this.ctx, this.canvas, this.dt)
+    document.title = this.game.title
+    this.resize()
+    this.intervalid = window.setInterval(() => this.Update(), 1000/60)
+  }
+
+  Update()
+  {
+    if (this.game){
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+      this.ctx.fillStyle = 'white'
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
+      this.game.gameloop()
+    }
+  }
+
+}
+
 intervalid = null
 gameclass = null
 classmap = {}
-function LoadGame(classname){
-  if (classname in classmap){
-    FinishLoadGame(classname)
-    return
-  }
 
-  filename = classname + '.js'
-
-  if ( intervalid ){
-    clearInterval(intervalid)
-  }
-  var oldGame = document.getElementById('gamescript')
-  if (oldGame != null){
-    oldGame.outerHTML = ""
-    delete oldGame
-  }
-
-  var head = document.getElementsByTagName("head")[0],
-        done = false;
-
-  var newGame = document.createElement('script')
-  var background = "white"
-  newGame.type = 'text/javascript'
-  newGame.src = 'source/' + filename
-  newGame.id = 'gamescript'
-  newGame.onload = newGame.onreadystatechange = function(){
-
-    if ( !done && (!this.readyState ||
-      this.readyState == "loaded" || this.readyState == "complete") ) {
-      done = true;
-      FinishLoadGame(classname); // execute callback function
-
-      // Prevent memory leaks in IE
-      newGame.onload = newGame.onreadystatechange = null;
-      head.removeChild( newGame );
-    }
-  };
-
-  document.head.appendChild(newGame);
-}
-
-function Setup(){
-  canvas = document.getElementById("gameCanvas")
-  ctx = canvas.getContext("2d")
-  dt = 1/60
-  background = "white"
-  gamenum = latest
-  LoadGame('game' + gamenum)
-}
-
-function FinishLoadGame(classname){
-  gameclass = classmap[classname]
-  game = new gameclass(ctx, canvas, dt)
-  intervalid = window.setInterval(Update, 1000/60)
-}
-
-function Update()
-{
-  if (game){
-  	ctx.clearRect(0, 0, canvas.width, canvas.height)
-  	ctx.fillStyle = background
-  	ctx.fillRect(0, 0, canvas.width, canvas.height)
-  	game.gameloop()
-  }
-}
 
 function Back()
 {

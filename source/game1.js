@@ -1,16 +1,10 @@
-class Game1 {
+class game1 {
   constructor(ctx, canvas, dt){
     this.ctx = ctx
     this.canvas = canvas
     this.dt = dt
     this.author = 'Steve'
     this.title = 'FireFast'
-
-    this.ctx.font = "30px Arial";
-    this.ctx.fillStyle = "red"
-    this.ctx.textAlign = "center"
-    this.backgroundColor = "gray"
-
     this.canvas.addEventListener("mousedown", () => this.fire(), false);
 
     this.bestDelayFromFire = 0;
@@ -19,15 +13,21 @@ class Game1 {
     this.reset()
   }
 
+  onresize() {
+    Engine.SetFont
+  }
+
   gameloop() {
-    this.count += dt
+    this.count += engine.dt
+    this.ctx.textAlign = "center"
+    this.backgroundColor = "gray"
     this.ctx.fillStyle = "red"
     this.ctx.fillText("Your best: " + round(this.bestDelayFromFire, 3), this.canvas.width/2,50);
     this.ctx.fillText("Your Last: " + round(this.lastDelayFromFire, 3), this.canvas.width/2,100);
 
     if(this.count >= this.countToFireOn) {
-      this.delayFromFire += dt
-      this.ctx.fillText(this.delayFromFire, this.canvas.width/2, this.canvas.height/2);
+      this.delayFromFire += engine.dt
+      this.ctx.fillText('FIRE!', this.canvas.width/2, this.canvas.height/2);
       this.shouldFire = true
     }
   }
@@ -55,4 +55,4 @@ class Game1 {
   }
 }
 
-classmap['game1'] = Game1
+classmap['game1'] = game1
