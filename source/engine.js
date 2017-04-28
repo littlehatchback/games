@@ -26,6 +26,17 @@ function SetCanvas(canvas){
   div.appendChild(canvas)
 }
 
+function resize(){
+  engine.resize()
+}
+
+class Vec2{
+  constructor(x,y){
+    this.x = x
+    this.y = y
+  }
+}
+
 class Engine{
   constructor(gamenum){
     this.intervalid = null
@@ -77,7 +88,10 @@ class Engine{
     document.head.appendChild(newGame);
   }
 
-
+  SetFont(size){
+    var num = size/100 * this.canvas.height
+    this.ctx.font = num + "px Arial"
+  }
 
   resize(){
     var w = window.innerWidth
@@ -107,6 +121,16 @@ class Engine{
     }
   }
 
+  GetPosition(x, y){
+    var rx = (x/100) * this.canvas.width
+    var ry = (y/100) * this.canvas.height
+    return new Vec2(rx,ry)
+  }
+
+  DrawText(x, y, text){
+    var pos = this.GetPosition(x, y)
+    this.ctx.fillText(text, pos.x, pos.y);
+  }
 }
 
 intervalid = null

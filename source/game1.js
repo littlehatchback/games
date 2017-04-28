@@ -14,7 +14,7 @@ class game1 {
   }
 
   onresize() {
-    Engine.SetFont
+    engine.SetFont(5)
   }
 
   gameloop() {
@@ -22,12 +22,12 @@ class game1 {
     this.ctx.textAlign = "center"
     this.backgroundColor = "gray"
     this.ctx.fillStyle = "red"
-    this.ctx.fillText("Your best: " + round(this.bestDelayFromFire, 3), this.canvas.width/2,50);
-    this.ctx.fillText("Your Last: " + round(this.lastDelayFromFire, 3), this.canvas.width/2,100);
+    engine.DrawText(50, 6, "Your best: " + round(this.bestDelayFromFire, 3))
+    engine.DrawText(50, 12, "Your last: " + round(this.lastDelayFromFire, 3))
 
     if(this.count >= this.countToFireOn) {
       this.delayFromFire += engine.dt
-      this.ctx.fillText('FIRE!', this.canvas.width/2, this.canvas.height/2);
+      engine.DrawText(50, 50, 'Fire!')
       this.shouldFire = true
     }
   }
