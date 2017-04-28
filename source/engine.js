@@ -22,7 +22,6 @@ function LoadGame(classname){
         done = false;
 
   var newGame = document.createElement('script')
-  var dt = 1/60
   var background = "white"
   newGame.type = 'text/javascript'
   newGame.src = 'source/' + filename
@@ -55,7 +54,7 @@ function Setup(){
 function FinishLoadGame(classname){
   gameclass = classmap[classname]
   game = new gameclass(ctx, canvas, dt)
-  intervalid = window.setInterval(Update, dt)
+  intervalid = window.setInterval(Update, 1000/60)
 }
 
 function Update()

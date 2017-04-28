@@ -27,7 +27,7 @@ class Game1 {
 
     if(this.count >= this.countToFireOn) {
       this.delayFromFire += dt
-      this.ctx.fillText("FIRE!!!!", this.canvas.width/2, this.canvas.height/2);
+      this.ctx.fillText(this.delayFromFire, this.canvas.width/2, this.canvas.height/2);
       this.shouldFire = true
     }
   }
