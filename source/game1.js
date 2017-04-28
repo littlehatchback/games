@@ -1,22 +1,22 @@
 class Game1 {
-  constructor(canvas, ctx, dt){
+  constructor(ctx, canvas, dt){
     this.ctx = ctx
     this.canvas = canvas
     this.dt = dt
     this.author = 'Steve'
     this.title = 'FireFast'
 
-    ctx.font = "30px Arial";
-    ctx.fillStyle = "red"
-    ctx.textAlign = "center"
-    backgroundColor = "gray"
+    this.ctx.font = "30px Arial";
+    this.ctx.fillStyle = "red"
+    this.ctx.textAlign = "center"
+    this.backgroundColor = "gray"
 
-    canvas.addEventListener("mousedown", getPosition, false);
+    this.canvas.addEventListener("mousedown", this.fire, false);
 
-    bestDelayFromFire = 0;
-    lastDelayFromFire = 0;
+    this.bestDelayFromFire = 0;
+    this.lastDelayFromFire = 0;
 
-    reset()
+    this.reset()
   }
 
   gameloop() {
@@ -47,22 +47,11 @@ class Game1 {
       if(this.bestDelayFromFire == 0 || this.delayFromFire < this.bestDelayFromFire) {
         this.bestDelayFromFire = this.delayFromFire
       }
-      reset()
+      this.reset()
     } 
     else {
-      reset()
+      this.reset()
     }
-  }
-
-
-  getPosition(event) {
-    this.x = event.x;
-    this.y = event.y;
-
-    this.x -= this.canvas.offsetLeft;
-    this.y -= this.canvas.offsetTop;
-
-      fire()
   }
 }
 
