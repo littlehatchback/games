@@ -49,7 +49,7 @@ function Setup(){
   dt = 1/60
   background = "white"
   gamenum = latest
-  LoadGame('Game' + gamenum)
+  LoadGame('game' + gamenum)
 }
 
 function FinishLoadGame(classname){
@@ -74,7 +74,7 @@ function Back()
   if (gamenum > 1){
     gamenum -= 1
   }
-  LoadGame('Game' + gamenum)
+  LoadGame('game' + gamenum)
 }
 
 function Forward()
@@ -82,7 +82,7 @@ function Forward()
   if (gamenum < latest){
     gamenum += 1
   }
-  LoadGame('Game' + gamenum)
+  LoadGame('game' + gamenum)
 }
 
 function getRandomInt(min, max) {
