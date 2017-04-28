@@ -19,7 +19,7 @@ class Game1 {
     reset()
   }
 
-  function gameloop() {
+  gameloop() {
     this.count += dt
     this.ctx.fillStyle = "red"
     this.ctx.fillText("Your best: " + round(this.bestDelayFromFire, 3), this.canvas.width/2,50);
@@ -32,7 +32,7 @@ class Game1 {
     }
   }
 
-  function reset() {
+  reset() {
     this.count = 0;
     this.shouldFire = false;
     this.countToFireOn = getRandomInt(.1, 45)
@@ -40,7 +40,7 @@ class Game1 {
     this.delayFromFire = 0
   }
 
-  function fire() {
+  fire() {
     this.fired = true
     if(this.shouldFire) {
       this.lastDelayFromFire = this.delayFromFire
@@ -55,7 +55,7 @@ class Game1 {
   }
 
 
-  function getPosition(event) {
+  getPosition(event) {
     this.x = event.x;
     this.y = event.y;
 
@@ -66,4 +66,4 @@ class Game1 {
   }
 }
 
-classmap['Game1'] = Game1
+classmap['game1'] = Game1

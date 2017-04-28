@@ -68,7 +68,6 @@ function Update()
   }
 }
 
-
 function Back()
 {
   if (gamenum > 1){
