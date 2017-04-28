@@ -11,7 +11,7 @@ class Game1 {
     this.ctx.textAlign = "center"
     this.backgroundColor = "gray"
 
-    this.canvas.addEventListener("mousedown", this.fire, false);
+    this.canvas.addEventListener("mousedown", () => this.fire(), false);
 
     this.bestDelayFromFire = 0;
     this.lastDelayFromFire = 0;
