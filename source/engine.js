@@ -1,7 +1,8 @@
 classmap = {}
+engine = null
 
 function InitialLoad(){
-  gamenum = latest
+  var gamenum = latest
   Setup(gamenum)
 }
 
@@ -10,6 +11,9 @@ function MakeClassname(gamenum){
 }
 
 function Setup(gamenum){
+  if (engine != null){
+    engine.destruct()
+  }
   engine = new Engine(gamenum)
 }
 
@@ -19,6 +23,7 @@ function DeleteElement(target_id){
     old.outerHTML = ""
   }
 }
+
 function SetCanvas(canvas){
   DeleteElement('gamecanvas')
   canvas.id = 'gamecanvas'
@@ -41,15 +46,20 @@ class Engine{
   constructor(gamenum){
     this.intervalid = null
     this.gameclass = null
+    this.gamenum = gamenum
     this.canvas = document.createElement('canvas')
     this.dt = 1/60
     SetCanvas(this.canvas)
     this.ctx = this.canvas.getContext("2d")
     this.LoadGame(gamenum)
+  }
 
+  destruct(){
+    window.clearInterval(this.intervalid)
   }
 
   LoadGame(gamenum){
+    console.log(gamenum)
     var classname = MakeClassname(gamenum)
     if (classname in classmap){
       this.FinishLoadGame(classname)
@@ -107,8 +117,8 @@ class Engine{
     this.gameclass = classmap[classname]
     this.game = new this.gameclass(this.ctx, this.canvas, this.dt)
     document.title = this.game.title
-    this.resize()
     this.intervalid = window.setInterval(() => this.Update(), 1000/60)
+    this.resize()
   }
 
   Update()
@@ -117,7 +127,9 @@ class Engine{
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
       this.ctx.fillStyle = 'white'
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
+      this.game.onresize()
       this.game.gameloop()
+
     }
   }
 
@@ -137,21 +149,16 @@ intervalid = null
 gameclass = null
 classmap = {}
 
-
 function Back()
 {
-  if (gamenum > 1){
-    gamenum -= 1
-  }
-  LoadGame('game' + gamenum)
+  var newgamenum = Math.max(1, engine.gamenum - 1)
+  Setup(newgamenum)
 }
 
 function Forward()
 {
-  if (gamenum < latest){
-    gamenum += 1
-  }
-  LoadGame('game' + gamenum)
+  var newgamenum = Math.min(latest, engine.gamenum + 1)
+  Setup(newgamenum)
 }
 
 function getRandomInt(min, max) {
