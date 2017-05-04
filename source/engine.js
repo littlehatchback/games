@@ -1,5 +1,6 @@
 classmap = {}
 engine = null
+keymap = {}
 
 function InitialLoad(){
   var gamenum = latest
@@ -42,8 +43,14 @@ class Vec2{
   }
 }
 
+
+function testKeyPress(){
+  console.log('asjdklasd')
+}
+
 class Engine{
   constructor(gamenum){
+    this.keymap = {}
     this.intervalid = null
     this.gameclass = null
     this.gamenum = gamenum
@@ -52,9 +59,30 @@ class Engine{
     SetCanvas(this.canvas)
     this.ctx = this.canvas.getContext("2d")
     this.LoadGame(gamenum)
+    window.addEventListener("keydown", () => this.engineKeyPress(event), false);
+  }
+
+  engineKeyPress(evt) {
+    var charCode = evt.keyCode || evt.which
+    var charStr = String.fromCharCode(charCode)
+
+    console.log(charStr + " pressed")
+    
+    console.log(this.keymap)
+    var action = this.keymap[charStr]
+    if (action) {
+      console.log("doing action")
+      action()
+    }
+  }
+
+  MapKey(key, event){
+    console.log('mapping key ' + key)
+    this.keymap[key] = event
   }
 
   destruct(){
+    window.removeEventListener("keydown", this.engineKeyPress, false);
     window.clearInterval(this.intervalid)
   }
 
@@ -98,9 +126,9 @@ class Engine{
     document.head.appendChild(newGame);
   }
 
-  SetFont(size){
+  SetFont(size, family = "Courier New"){
     var num = size/100 * this.canvas.height
-    this.ctx.font = num + "px Arial"
+    this.ctx.font = num + "px " + family
   }
 
   resize(){
@@ -109,7 +137,6 @@ class Engine{
     var x = Math.min(w, h)
     this.canvas.width = x
     this.canvas.height = x
-    this.game.onresize()
     this.Update()
   }
 
@@ -127,7 +154,6 @@ class Engine{
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
       this.ctx.fillStyle = 'white'
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
-      this.game.onresize()
       this.game.gameloop()
 
     }
@@ -139,8 +165,9 @@ class Engine{
     return new Vec2(rx,ry)
   }
 
-  DrawText(x, y, text){
+  DrawText(x, y, text, size){
     var pos = this.GetPosition(x, y)
+    this.SetFont(size)
     this.ctx.fillText(text, pos.x, pos.y);
   }
 }
@@ -148,6 +175,30 @@ class Engine{
 intervalid = null
 gameclass = null
 classmap = {}
+
+class Random{
+  static Range(min, max){
+    return Math.random() * (max - min) + min
+  }
+
+  static IRange(min, max){
+    return Math.floor(Random.Range(min, max))
+  }
+
+  static Choice(array){
+    return array[Random.IRange(0, array.length)]
+  }
+}
+
+function Cap(num, min, max){
+  if (num < min){
+    return min
+  }
+  if (num > max){
+    return max
+  }
+  return num
+}
 
 function Back()
 {

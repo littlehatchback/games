@@ -1,58 +1,55 @@
-class game1 {
-  constructor(ctx, canvas, dt){
-    this.ctx = ctx
-    this.canvas = canvas
-    this.dt = dt
-    this.author = 'Steve'
-    this.title = 'FireFast'
-    this.canvas.addEventListener("mousedown", () => this.fire(), false);
+{
+  class Game {
+    constructor(ctx, canvas, dt){
+      this.ctx = ctx
+      this.canvas = canvas
+      this.dt = dt
+      this.author = 'Steve'
+      this.title = 'FireFast'
+      this.canvas.addEventListener("mousedown", () => this.fire(), false);
 
-    this.bestDelayFromFire = 0;
-    this.lastDelayFromFire = 0;
+      this.bestDelayFromFire = 0;
+      this.lastDelayFromFire = 0;
 
-    this.reset()
-  }
-
-  onresize() {
-    engine.SetFont(5)
-  }
-
-  gameloop() {
-    this.count += engine.dt
-    this.ctx.textAlign = "center"
-    this.backgroundColor = "gray"
-    this.ctx.fillStyle = "red"
-    engine.DrawText(50, 6, "Your best: " + round(this.bestDelayFromFire, 3))
-    engine.DrawText(50, 12, "Your last: " + round(this.lastDelayFromFire, 3))
-
-    if(this.count >= this.countToFireOn) {
-      this.delayFromFire += engine.dt
-      engine.DrawText(50, 50, 'Fire!')
-      this.shouldFire = true
+      this.reset()
     }
-  }
 
-  reset() {
-    this.count = 0;
-    this.shouldFire = false;
-    this.countToFireOn = getRandomInt(.1, 45)
-    this.fired = false
-    this.delayFromFire = 0
-  }
+    gameloop() {
+      this.count += engine.dt
+      this.ctx.textAlign = "center"
+      this.backgroundColor = "gray"
+      this.ctx.fillStyle = "red"
+      engine.DrawText(50, 6, "Your best: " + round(this.bestDelayFromFire, 3), 5)
+      engine.DrawText(50, 12, "Your last: " + round(this.lastDelayFromFire, 3), 5)
 
-  fire() {
-    this.fired = true
-    if(this.shouldFire) {
-      this.lastDelayFromFire = this.delayFromFire
-      if(this.bestDelayFromFire == 0 || this.delayFromFire < this.bestDelayFromFire) {
-        this.bestDelayFromFire = this.delayFromFire
+      if(this.count >= this.countToFireOn) {
+        this.delayFromFire += engine.dt
+        engine.DrawText(50, 50, 'Fire!', 5)
+        this.shouldFire = true
       }
-      this.reset()
-    } 
-    else {
-      this.reset()
+    }
+
+    reset() {
+      this.count = 0;
+      this.shouldFire = false;
+      this.countToFireOn = getRandomInt(.1, 45)
+      this.fired = false
+      this.delayFromFire = 0
+    }
+
+    fire() {
+      this.fired = true
+      if(this.shouldFire) {
+        this.lastDelayFromFire = this.delayFromFire
+        if(this.bestDelayFromFire == 0 || this.delayFromFire < this.bestDelayFromFire) {
+          this.bestDelayFromFire = this.delayFromFire
+        }
+        this.reset()
+      } 
+      else {
+        this.reset()
+      }
     }
   }
+  classmap['game1'] = Game
 }
-
-classmap['game1'] = game1
