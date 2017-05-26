@@ -170,6 +170,16 @@ class Engine{
     this.SetFont(size)
     this.ctx.fillText(text, pos.x, pos.y);
   }
+
+  DrawCircle(center, r, color, borderWidth, borderColor){
+    this.ctx.beginPath();
+    this.ctx.arc(center.x, center.y, r, 0, 2 * Math.PI, false);
+    this.ctx.fillStyle = color;
+    this.ctx.fill();
+    this.ctx.lineWidth = borderWidth;
+    this.ctx.strokeStyle = borderColor;
+    this.ctx.stroke();
+  }
 }
 
 intervalid = null
